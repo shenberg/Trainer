@@ -710,11 +710,11 @@ class Trainer:
             model_g = checkpoint['model']
             model_d = checkpoint['model_disc']
             model_g = {'model_g.' + k : v for k,v in model_g.items()}
-            model_d = {'model_d.' + k : v for k,v in model_d.items()}
+            model_d = {'model_d.' + k : v for k,v in model_d.items()} if model_d is not None else {}
             model_dict = {**model_g, **model_d}
             # replace separate entries  by lists, expecting discriminator first
-            optimizers = [checkpoint['optimizer_disc'], checkpoint['optimizer']]
-            schedulers = [checkpoint['scheduler_disc'], checkpoint['scheduler']]
+            optimizers = [checkpoint['optimizer_disc'] if checkpoint['optimizer_disc'] is not None else {}, checkpoint['optimizer']]
+            schedulers = [checkpoint['scheduler_disc'] if checkpoint['scheduler_disc'] is not None else {}, checkpoint['scheduler']]
 
             del checkpoint['model_disc'], checkpoint['optimizer_disc'], checkpoint['scheduler_disc']
             checkpoint['model'] = model_dict
